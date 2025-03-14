@@ -270,20 +270,6 @@ h1 {
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     z-index: 1;
-    pointer-events: none;
-}
-
-.wild-card::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
-    transform: rotate(45deg);
-    animation: shine 3s infinite;
-    pointer-events: none;
 }
 
 .wild-card.active-wild-card {
@@ -322,27 +308,14 @@ h1 {
     }
 }
 
-@keyframes shine {
-    0% { left: -50%; }
-    100% { left: 150%; }
-}
-
-.wild-card:hover {
-    filter: brightness(1.1);
-}
-
-.wild-card.current-player {
-    animation: activeWildCard 1s infinite !important;
-}
-
 .wild-card-prompt.kahoot-style {
-    background-color: rgba(0, 0, 0, 0.9);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.wild-card-prompt.kahoot-style.show {
-    opacity: 1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    z-index: 1000;
 }
 
 .wild-card-prompt.kahoot-style .wild-card-content {
@@ -352,14 +325,7 @@ h1 {
     text-align: center;
     color: white;
     box-shadow: 0 0 40px rgba(33, 150, 243, 0.6);
-    max-width: 500px;
-    width: 90%;
-    transform: scale(0.8);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.wild-card-prompt.kahoot-style.show .wild-card-content {
-    transform: scale(1);
+    width: 100%;
 }
 
 .wild-card-prompt.kahoot-style .review-stats {
