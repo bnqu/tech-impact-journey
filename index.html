@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Impact Journey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Tech Impact Journey</h1>
+        
+        <div id="name-input-form" class="name-input-form">
+            <h2>Enter Player Names</h2>
+            <div class="input-group">
+                <label for="player1-name">Player 1 Name:</label>
+                <input type="text" id="player1-name" required>
+            </div>
+            <div class="input-group">
+                <label for="player2-name">Player 2 Name:</label>
+                <input type="text" id="player2-name" required>
+            </div>
+            <button id="start-game" class="start-button">Start Game</button>
+        </div>
+
+        <div id="game-content" class="game-content" style="display: none;">
+            <div class="game-info">
+                <div id="current-player">Current Player: <span>Player 1</span></div>
+                <div id="turn-counter">Turn: <span>1</span></div>
+            </div>
+            
+            <div class="game-board">
+                <div id="board" class="board-grid"></div>
+            </div>
+
+            <div class="player-controls">
+                <div id="player1" class="player">
+                    <h3>Player 1</h3>
+                    <div class="player-position">Position: <span>0</span></div>
+                </div>
+                <div id="player2" class="player">
+                    <h3>Player 2</h3>
+                    <div class="player-position">Position: <span>0</span></div>
+                </div>
+            </div>
+
+            <div id="message-display" class="message-display"></div>
+
+            <div id="question-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Technology Question</h2>
+                    <p id="question-text"></p>
+                    <div id="answer-options" class="answer-options"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="questions.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
