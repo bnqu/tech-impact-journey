@@ -7,7 +7,8 @@ const questions = [
             "No significant impact on mental health",
             "Only affected physical health"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "What is the main impact of artificial intelligence on healthcare?",
@@ -17,7 +18,8 @@ const questions = [
             "Increased healthcare costs",
             "Decreased medical accuracy"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "hard"
     },
     {
         question: "How has remote work technology changed family dynamics?",
@@ -27,7 +29,8 @@ const questions = [
             "No impact on family life",
             "Increased commuting time"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     },
     {
         question: "What is the primary environmental impact of cryptocurrency mining?",
@@ -37,7 +40,8 @@ const questions = [
             "Improved air quality",
             "Decreased electronic waste"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "How has educational technology affected learning outcomes?",
@@ -47,7 +51,8 @@ const questions = [
             "Eliminated traditional teaching methods",
             "Reduced academic performance"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     },
     {
         question: "What is the main privacy concern with smart home devices?",
@@ -57,7 +62,8 @@ const questions = [
             "Complex installation process",
             "Limited functionality"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "How has streaming technology impacted traditional media?",
@@ -67,7 +73,8 @@ const questions = [
             "Improved traditional TV ratings",
             "Reduced internet usage"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     },
     {
         question: "What is the primary impact of automation on employment?",
@@ -77,7 +84,8 @@ const questions = [
             "Only affected manufacturing",
             "No impact on job market"
         ],
-        correct: 0
+        correct: 0,
+        difficulty: "hard"
     },
     {
         question: "How has mobile technology affected social interactions?",
@@ -87,7 +95,8 @@ const questions = [
             "Eliminated social media use",
             "Improved physical activity"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "What is the main impact of virtual reality on education?",
@@ -97,7 +106,8 @@ const questions = [
             "Reduced student engagement",
             "Increased textbook sales"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "hard"
     },
     {
         question: "How has e-commerce affected local businesses?",
@@ -107,7 +117,8 @@ const questions = [
             "Eliminated all local stores",
             "No impact on local economy"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     },
     {
         question: "What is the primary impact of social media on political discourse?",
@@ -117,7 +128,8 @@ const questions = [
             "Reduced political engagement",
             "Eliminated fake news"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "hard"
     },
     {
         question: "How has technology affected human attention spans?",
@@ -127,7 +139,8 @@ const questions = [
             "No impact on attention",
             "Improved memory retention"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "What is the main impact of ride-sharing apps on transportation?",
@@ -137,7 +150,8 @@ const questions = [
             "Reduced car ownership",
             "Improved traffic congestion"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     },
     {
         question: "How has digital technology affected traditional art forms?",
@@ -147,7 +161,8 @@ const questions = [
             "Reduced artistic creativity",
             "Decreased art appreciation"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "What is the primary impact of 5G technology on society?",
@@ -157,7 +172,8 @@ const questions = [
             "Reduced mobile connectivity",
             "Increased energy consumption"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "hard"
     },
     {
         question: "How has cloud computing transformed business operations?",
@@ -167,7 +183,8 @@ const questions = [
             "Enabled remote work and global collaboration",
             "Decreased data security"
         ],
-        correct: 2
+        correct: 2,
+        difficulty: "medium"
     },
     {
         question: "What is the main impact of artificial intelligence on creative industries?",
@@ -177,7 +194,8 @@ const questions = [
             "Reduced artistic quality",
             "Decreased job opportunities"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "hard"
     },
     {
         question: "How has technology affected human memory?",
@@ -187,7 +205,8 @@ const questions = [
             "Eliminated the need for memory",
             "Reduced cognitive abilities"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "medium"
     },
     {
         question: "What is the primary impact of wearable technology on health?",
@@ -197,7 +216,8 @@ const questions = [
             "Increased healthcare costs",
             "Reduced doctor visits"
         ],
-        correct: 1
+        correct: 1,
+        difficulty: "easy"
     }
 ];
 
@@ -254,39 +274,20 @@ let usedQuestions = [];
 let usedWildCardQuestions = [];
 
 // Modified function to get random question
-function getRandomQuestion(isWildCard = false) {
-    if (isWildCard) {
-        if (usedWildCardQuestions.length === wildCardQuestions.length) {
-            usedWildCardQuestions = [];
-        }
-        
-        // Randomly decide between easy and hard question
-        const difficulty = Math.random() < 0.5 ? "easy" : "hard";
-        const availableQuestions = wildCardQuestions.filter(q => 
-            !usedWildCardQuestions.includes(q) && q.difficulty === difficulty
-        );
-        
-        if (availableQuestions.length === 0) {
-            // If no questions of the chosen difficulty, use any available wild card question
-            const anyAvailable = wildCardQuestions.filter(q => !usedWildCardQuestions.includes(q));
-            const question = anyAvailable[Math.floor(Math.random() * anyAvailable.length)];
-            usedWildCardQuestions.push(question);
-            return question;
-        }
-        
-        const question = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-        usedWildCardQuestions.push(question);
-        return question;
+function getRandomQuestion(isWildCard = false, difficulty = null) {
+    const questionSet = isWildCard ? wildCardQuestions : questions;
+    let availableQuestions = questionSet;
+
+    // Filter questions by difficulty if specified
+    if (difficulty) {
+        availableQuestions = questionSet.filter(q => q.difficulty === difficulty);
     }
-    
-    // Regular question logic
-    if (questions.length === 0) {
-        questions.push(...usedQuestions);
-        usedQuestions = [];
+
+    // If no questions available for the selected difficulty, return null
+    if (availableQuestions.length === 0) {
+        return null;
     }
-    
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const question = questions.splice(randomIndex, 1)[0];
-    usedQuestions.push(question);
-    return question;
+
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    return availableQuestions[randomIndex];
 }

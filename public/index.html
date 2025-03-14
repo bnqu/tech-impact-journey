@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Impact Journey - Multiplayer</title>
+    <title>Tech Impact Journey</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -11,6 +11,18 @@
         <h1>Tech Impact Journey</h1>
         
         <form id="name-input-form" class="name-input-form">
+            <h2>New Game</h2>
+            <div class="input-group">
+                <label for="player-count">Number of Players:</label>
+                <select id="player-count" required>
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                </select>
+            </div>
+            <div id="player-inputs">
+                <!-- Player name inputs will be added here dynamically -->
+            </div>
             <button id="start-game" class="start-button">Start Game</button>
         </form>
 
@@ -54,13 +66,11 @@
         <div id="message-display" class="message-display"></div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script src="js/questions.js"></script>
     <script src="js/game.js"></script>
-    <script src="js/multiplayer.js"></script>
     <script>
         window.onload = () => {
-            const game = new MultiplayerGame();
+            const game = new Game();
         };
     </script>
 </body>

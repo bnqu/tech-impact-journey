@@ -3,18 +3,24 @@ class MultiplayerGame extends Game {
         super();
         this.socket = io();
         this.roomId = null;
+        this.isHost = false;
+        this.waitingRoom = document.getElementById('waiting-room');
+        this.waitingPlayers = document.getElementById('waiting-players');
+        this.startButton = document.getElementById('start-game');
         this.setupSocketListeners();
+        this.initializeEventListeners();
     }
 
     setupSocketListeners() {
         this.socket.on('playerJoined', (data) => {
-            this.updatePlayers(data.players);
-            if (data.gameStarted) {
-                this.startGame();
+            this.updateWaitingRoom(data.players);
+            if (this.isHost && data.players.length >= 2) {
+                this.startButton.disabled = false;
             }
         });
 
         this.socket.on('gameStart', (data) => {
+            this.waitingRoom.style.display = 'none';
             this.updatePlayers(data.players);
             this.startGame();
         });
@@ -38,13 +44,78 @@ class MultiplayerGame extends Game {
         });
 
         this.socket.on('playerLeft', (data) => {
-            this.updatePlayers(data.players);
-            this.updateUI();
+            if (this.waitingRoom.style.display !== 'none') {
+                this.updateWaitingRoom(data.players);
+            } else {
+                this.updatePlayers(data.players);
+                this.updateUI();
+            }
+        });
+    }
+
+    updateWaitingRoom(players) {
+        this.waitingPlayers.innerHTML = '';
+        players.forEach((player, index) => {
+            const li = document.createElement('li');
+            li.textContent = player.name;
+            if (player.id === this.socket.id) {
+                li.classList.add('host');
+            }
+            this.waitingPlayers.appendChild(li);
         });
 
-        this.socket.on('roomFull', () => {
-            alert('This room is full. Please try another room.');
-            window.location.reload();
+        const waitingMessage = this.waitingRoom.querySelector('.waiting-message');
+        if (players.length < 2) {
+            waitingMessage.textContent = 'Waiting for more players to join...';
+            this.startButton.disabled = true;
+        } else {
+            waitingMessage.textContent = 'Ready to start!';
+            if (this.isHost) {
+                this.startButton.disabled = false;
+            }
+        }
+    }
+
+    generateRoomId() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    initializeEventListeners() {
+        document.getElementById('create-game').addEventListener('click', (e) => {
+            e.preventDefault();
+            const hostName = document.getElementById('host-name').value;
+            const playerCount = parseInt(document.getElementById('player-count').value);
+
+            if (!hostName) {
+                alert('Please enter your name!');
+                return;
+            }
+
+            this.isHost = true;
+            this.playerCount = playerCount;
+            this.roomId = this.generateRoomId();
+            
+            // Show waiting room
+            this.nameInputForm.style.display = 'none';
+            this.waitingRoom.style.display = 'block';
+            
+            // Display room code
+            const gameCode = this.waitingRoom.querySelector('.game-code');
+            gameCode.textContent = this.roomId;
+            gameCode.addEventListener('click', () => {
+                navigator.clipboard.writeText(this.roomId)
+                    .then(() => alert('Game code copied to clipboard!'))
+                    .catch(err => console.error('Failed to copy code:', err));
+            });
+
+            // Join as host
+            this.socket.emit('joinGame', { roomId: this.roomId, playerName: hostName });
+        });
+
+        this.startButton.addEventListener('click', () => {
+            if (this.isHost) {
+                this.socket.emit('startGame', { roomId: this.roomId });
+            }
         });
     }
 
@@ -88,30 +159,6 @@ class MultiplayerGame extends Game {
             
             this.showMessage(message, isCorrect);
         }, 300);
-    }
-
-    initializeEventListeners() {
-        // Create room input
-        const roomInput = document.createElement('input');
-        roomInput.type = 'text';
-        roomInput.id = 'room-id';
-        roomInput.placeholder = 'Enter Room ID';
-        roomInput.required = true;
-        this.nameInputForm.insertBefore(roomInput, this.nameInputForm.firstChild);
-
-        document.getElementById('start-game').addEventListener('click', (e) => {
-            e.preventDefault();
-            const playerName = document.getElementById('player1-name').value;
-            const roomId = document.getElementById('room-id').value;
-
-            if (!playerName || !roomId) {
-                alert('Please enter both your name and a room ID!');
-                return;
-            }
-
-            this.roomId = roomId;
-            this.socket.emit('joinGame', { roomId, playerName });
-        });
     }
 
     startGame() {
